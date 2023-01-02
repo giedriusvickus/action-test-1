@@ -1,7 +1,9 @@
 {
     "name": "action-test-1",
-    "version": "1.0.0",
-    "main": "index.js",
+    "version": "1.0.1",
+    "main": "build/index.js",
+    "module": "build/index.modern.js",
+    "source": "index.js",
     "repository": "git@github.com:giedriusvickus/action-test-1.git",
     "author": "Giedrius Vickus <giedrius.vickus@gmail.com>",
     "license": "MIT",
@@ -13,8 +15,5 @@
     "dependencies": {
         "prettier": "^2.8.1",
         "microbundle-crl": "^0.13.10"
-    },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
     }
 }
