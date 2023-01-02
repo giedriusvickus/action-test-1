@@ -40,7 +40,7 @@ jobs:
                     PAYLOAD_LIBRARY: "action-test-1"
                     PAYLOAD_FORCERC: ${{ inputs.forceRc }}
                 with:
-                    repository: dappradar/developer-dashboard
+                    repository: giedriusvickus/action-test-2
                     event: promote
                     github_pat: ${{ secrets.AUTH_TOKEN }}
 
