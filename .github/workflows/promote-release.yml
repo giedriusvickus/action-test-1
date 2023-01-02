@@ -37,7 +37,7 @@ jobs:
                 uses: passeidireto/trigger-external-workflow-action@main
                 env:
                     PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
-                    PAYLOAD_LIBRARY: "@giedriusvickus/action-test-1"
+                    PAYLOAD_LIBRARY: "action-test-1"
                     PAYLOAD_FORCERC: ${{ inputs.forceRc }}
                 with:
                     repository: dappradar/developer-dashboard
@@ -49,7 +49,7 @@ jobs:
                 uses: passeidireto/trigger-external-workflow-action@main
                 env:
                     PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
-                    PAYLOAD_LIBRARY: "@giedriusvickus/action-test-1"
+                    PAYLOAD_LIBRARY: "action-test-1"
                     PAYLOAD_FORCERC: ${{ inputs.forceRc }}
                 with:
                     repository: giedriusvickus/action-test-3
