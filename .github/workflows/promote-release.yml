@@ -1,0 +1,57 @@
+name: Promote release
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'Define version or last'
+            repository:
+                description: 'Promoted repository'
+                required: true
+                default: 'all'
+                type: choice
+                options:
+                    - all
+                    - action-test-2
+                    - action-test-3
+            forceRc:
+                description: 'Force RC version bump'
+                required: true
+                type: boolean
+
+jobs:
+    promote:
+        name: Promote new version to product
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Get latest version from package.json
+                id: version
+                run: cd lib && echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
+                shell: bash
+
+            -   name: Promote version ${{ inputs.version || steps.version.outputs.tag }} to giedriusvickus/action-test-2 repository. Force RC is ${{ inputs.forceRc }}
+                if: inputs.repository == 'all' || inputs.repository == 'action-test-2'
+                uses: passeidireto/trigger-external-workflow-action@main
+                env:
+                    PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
+                    PAYLOAD_LIBRARY: "@giedriusvickus/action-test-1"
+                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
+                with:
+                    repository: dappradar/developer-dashboard
+                    event: promote
+                    github_pat: ${{ secrets.AUTH_TOKEN }}
+
+            -   name: Promote version ${{ inputs.version || steps.version.outputs.tag }} to giedriusvickus/action-test-3 repository. Force RC is ${{ inputs.forceRc }}
+                if: inputs.repository == 'all' || inputs.repository == 'action-test-3'
+                uses: passeidireto/trigger-external-workflow-action@main
+                env:
+                    PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
+                    PAYLOAD_LIBRARY: "@giedriusvickus/action-test-1"
+                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
+                with:
+                    repository: giedriusvickus/action-test-3
+                    event: promote
+                    github_pat: ${{ secrets.AUTH_TOKEN }}
