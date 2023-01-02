@@ -29,7 +29,7 @@ jobs:
 
             -   name: Get latest version from package.json
                 id: version
-                run: cd lib && echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
+                run: echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
                 shell: bash
 
             -   name: Promote version ${{ inputs.version || steps.version.outputs.tag }} to giedriusvickus/action-test-2 repository. Force RC is ${{ inputs.forceRc }}
