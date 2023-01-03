@@ -48,22 +48,19 @@ jobs:
 
         strategy:
             matrix:
-                repository: ["action-test-2", "action-test-3"]
-#                repository: ${{fromJson(needs.check.outputs.matrix)}}
+                repository: ${{fromJson(needs.check.outputs.matrix)}}
 
         steps:
-            -   name: bla bla ${{fromJson(needs.check.outputs.matrix)}}
-                run: echo ""
-#            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
-#                uses: passeidireto/trigger-external-workflow-action@main
-#                env:
-#                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
-#                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
-#                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
-#                with:
-#                    repository: ${{ inputs.org }}/${{ matrix.repository }}
-#                    event: promote
-#                    github_pat: ${{ secrets.AUTH_TOKEN }}
+            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
+                uses: passeidireto/trigger-external-workflow-action@main
+                env:
+                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
+                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
+                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
+                with:
+                    repository: ${{ inputs.org }}/${{ matrix.repository }}
+                    event: promote
+                    github_pat: ${{ secrets.AUTH_TOKEN }}
 
     promote-one:
         name: Promote selected repository
