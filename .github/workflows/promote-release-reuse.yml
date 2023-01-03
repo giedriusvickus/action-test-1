@@ -35,10 +35,8 @@ jobs:
                 shell: bash
 
             -   id: setVariables
-                run: |
-                    echo "matrix=$input"
-                env:
-                    input: ${{ inputs.allRepositoriesJson }}
+                run: echo "matrix=${{ inputs.allRepositoriesJson }}" >> $GITHUB_OUTPUT
+                shell: bash
 
     promote-all:
         name: Promote all repositories
