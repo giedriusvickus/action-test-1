@@ -20,56 +20,14 @@ on:
                 type: boolean
 
 jobs:
-    check:
-        name: Select repositories to promote
-        runs-on: ubuntu-latest
-        outputs:
-            latest-version: ${{ steps.version.outputs.tag }}
-
-        steps:
-            -   uses: actions/checkout@v3
-
-            -   name: Get latest version from package.json
-                id: version
-                run: echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
-                shell: bash
-
-    promote-all:
-        name: Promote all repositories
-        needs: check
-        if: inputs.repository == 'all'
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                repository: [ 'action-test-2', 'action-test-3' ]
-
-        steps:
-            -   name: Promote version ${{ inputs.version || needs.check.outputs.latest-version }} to giedriusvickus/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
-                uses: passeidireto/trigger-external-workflow-action@main
-                env:
-                    PAYLOAD_VERSION: ${{ inputs.version || needs.check.outputs.latest-version }}
-                    PAYLOAD_LIBRARY: "action-test-1"
-                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
-                with:
-                    repository: giedriusvickus/${{ matrix.repository }}
-                    event: promote
-                    github_pat: ${{ secrets.AUTH_TOKEN }}
-
-    promote-one:
-        name: Promote selected repository
-        needs: check
-        if: inputs.repository != 'all'
-        runs-on: ubuntu-latest
-
-        steps:
-            -   name: Promote version ${{ inputs.version || needs.check.outputs.latest-version }} to giedriusvickus/${{ inputs.repository }} repository. Force RC is ${{ inputs.forceRc }}
-                uses: passeidireto/trigger-external-workflow-action@main
-                env:
-                    PAYLOAD_VERSION: ${{ inputs.version || needs.check.outputs.latest-version }}
-                    PAYLOAD_LIBRARY: "action-test-1"
-                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
-                with:
-                    repository: giedriusvickus/${{ inputs.repository }}
-                    event: promote
-                    github_pat: ${{ secrets.AUTH_TOKEN }}
+    promote:
+        uses: ./.github/workflows/promote-release-reuse.yml
+        with:
+            selectedVersion: ${{ inputs.version }}
+            payloadLibrary: "action-test-1"
+            selectedRepository: ${{ inputs.repository }}
+            forceRc: ${{ inputs.forceRc }}
+            dir: .
+            allRepositoriesJson: '["action-test-2", "action-test-3"]'
+            org: "giedriusvickus"
+        secrets: inherit
