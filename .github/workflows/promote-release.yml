@@ -20,9 +20,11 @@ on:
                 type: boolean
 
 jobs:
-    promote:
-        name: Promote new version to product
+    check:
+        name: Select repositories to promote
         runs-on: ubuntu-latest
+        outputs:
+            latest-version: ${{ steps.version.outputs.tag }}
 
         steps:
             -   uses: actions/checkout@v3
@@ -32,26 +34,42 @@ jobs:
                 run: echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
                 shell: bash
 
-            -   name: Promote version ${{ inputs.version || steps.version.outputs.tag }} to giedriusvickus/action-test-2 repository. Force RC is ${{ inputs.forceRc }}
-                if: inputs.repository == 'all' || inputs.repository == 'action-test-2'
+    promote-all:
+        name: Promote all repositories
+        needs: check
+        if: inputs.repository == 'all'
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                repository: [ 'action-test-2', 'action-test-3' ]
+
+        steps:
+            -   name: Promote version ${{ inputs.version || needs.check.outputs.latest-version }} to giedriusvickus/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
                 uses: passeidireto/trigger-external-workflow-action@main
                 env:
-                    PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
+                    PAYLOAD_VERSION: ${{ inputs.version || needs.check.outputs.latest-version }}
                     PAYLOAD_LIBRARY: "action-test-1"
                     PAYLOAD_FORCERC: ${{ inputs.forceRc }}
                 with:
-                    repository: giedriusvickus/action-test-2
+                    repository: giedriusvickus/${{ matrix.repository }}
                     event: promote
                     github_pat: ${{ secrets.AUTH_TOKEN }}
 
-            -   name: Promote version ${{ inputs.version || steps.version.outputs.tag }} to giedriusvickus/action-test-3 repository. Force RC is ${{ inputs.forceRc }}
-                if: inputs.repository == 'all' || inputs.repository == 'action-test-3'
+    promote-one:
+        name: Promote selected repository
+        needs: check
+        if: inputs.repository != 'all'
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Promote version ${{ inputs.version || needs.check.outputs.latest-version }} to giedriusvickus/${{ inputs.repository }} repository. Force RC is ${{ inputs.forceRc }}
                 uses: passeidireto/trigger-external-workflow-action@main
                 env:
-                    PAYLOAD_VERSION: ${{ inputs.version || steps.version.outputs.tag }}
+                    PAYLOAD_VERSION: ${{ inputs.version || needs.check.outputs.latest-version }}
                     PAYLOAD_LIBRARY: "action-test-1"
                     PAYLOAD_FORCERC: ${{ inputs.forceRc }}
                 with:
-                    repository: giedriusvickus/action-test-3
+                    repository: giedriusvickus/${{ inputs.repository }}
                     event: promote
                     github_pat: ${{ secrets.AUTH_TOKEN }}
