@@ -20,7 +20,7 @@ on:
                 type: boolean
 
 jobs:
-    promote:
+    promote-release:
         uses: ./.github/workflows/promote-release-reuse.yml
         with:
             selectedVersion: ${{ inputs.version }}
