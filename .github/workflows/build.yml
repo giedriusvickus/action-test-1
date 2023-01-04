@@ -1,0 +1,44 @@
+name: Auto Deploy
+
+on:
+    pull_request:
+        types:
+            - closed
+
+jobs:
+    build:
+        if: github.event.pull_request.merged == true
+        name: Build
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [ 14.x ]
+
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Use Node.js ${{ matrix.node-version }}
+                uses: actions/setup-node@v3
+                with:
+                    node-version: ${{ matrix.node-version }}
+                    cache: 'yarn'
+
+            -   name: Check npmrc existence
+                id: check_files
+                uses: andstor/file-existence-action@v2
+                with:
+                    files: "test.txt"
+
+            -   name: File exists
+                if: steps.check_files.outputs.files_exists == 'false'
+                run: echo "test" >> test.txt
+
+            -   name: Yarn timeout config
+                run: yarn config set network-timeout 300000
+
+            -   name: Install dependencies
+                run: yarn --prefer-offline
+
+            -   name: Build FrontEnd application
+                run: yarn run build
