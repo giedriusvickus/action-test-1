@@ -29,6 +29,16 @@ jobs:
         steps:
             -   uses: actions/checkout@v3
 
+            -   name: Check npmrc existence
+                id: check_files
+                uses: andstor/file-existence-action@v2
+                with:
+                    files: "${{ inputs.dir }}/test.txt"
+
+            -   name: File exists
+                if: steps.check_files.outputs.files_exists == 'false'
+                run: cd ${{ inputs.dir }} && echo "test" >> test.txt
+
             -   name: Get latest version from package.json
                 id: version
                 run: cd ${{ inputs.dir }} && echo "tag=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)" >> $GITHUB_OUTPUT
@@ -40,42 +50,42 @@ jobs:
                     input: ${{ inputs.allRepositoriesJson }}
                 shell: bash
 
-    promote-all:
-        name: Promote all repositories
-        needs: check
-        if: inputs.selectedRepository == 'all'
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                repository: ${{fromJson(needs.check.outputs.matrix)}}
-
-        steps:
-            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
-                uses: passeidireto/trigger-external-workflow-action@main
-                env:
-                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
-                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
-                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
-                with:
-                    repository: ${{ inputs.org }}/${{ matrix.repository }}
-                    event: promote
-                    github_pat: ${{ secrets.AUTH_TOKEN }}
-
-    promote-one:
-        name: Promote selected repository
-        needs: check
-        if: inputs.selectedRepository != 'all'
-        runs-on: ubuntu-latest
-
-        steps:
-            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ inputs.selectedRepository }} repository. Force RC is ${{ inputs.forceRc }}
-                uses: passeidireto/trigger-external-workflow-action@main
-                env:
-                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
-                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
-                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
-                with:
-                    repository: ${{ inputs.org }}/${{ inputs.selectedRepository }}
-                    event: promote
-                    github_pat: ${{ secrets.AUTH_TOKEN }}
+#    promote-all:
+#        name: Promote all repositories
+#        needs: check
+#        if: inputs.selectedRepository == 'all'
+#        runs-on: ubuntu-latest
+#
+#        strategy:
+#            matrix:
+#                repository: ${{fromJson(needs.check.outputs.matrix)}}
+#
+#        steps:
+#            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ matrix.repository }} repository. Force RC is ${{ inputs.forceRc }}
+#                uses: passeidireto/trigger-external-workflow-action@main
+#                env:
+#                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
+#                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
+#                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
+#                with:
+#                    repository: ${{ inputs.org }}/${{ matrix.repository }}
+#                    event: promote
+#                    github_pat: ${{ secrets.AUTH_TOKEN }}
+#
+#    promote-one:
+#        name: Promote selected repository
+#        needs: check
+#        if: inputs.selectedRepository != 'all'
+#        runs-on: ubuntu-latest
+#
+#        steps:
+#            -   name: Promote version ${{ inputs.selectedVersion || needs.check.outputs.latest-version }} to ${{ inputs.org }}/${{ inputs.selectedRepository }} repository. Force RC is ${{ inputs.forceRc }}
+#                uses: passeidireto/trigger-external-workflow-action@main
+#                env:
+#                    PAYLOAD_VERSION: ${{ inputs.selectedVersion || needs.check.outputs.latest-version }}
+#                    PAYLOAD_LIBRARY: ${{ inputs.payloadLibrary }}
+#                    PAYLOAD_FORCERC: ${{ inputs.forceRc }}
+#                with:
+#                    repository: ${{ inputs.org }}/${{ inputs.selectedRepository }}
+#                    event: promote
+#                    github_pat: ${{ secrets.AUTH_TOKEN }}
