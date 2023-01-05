@@ -53,5 +53,4 @@ jobs:
                 with:
                     tag: release-${{ github.sha }}
                     name: Release version - ${{ github.sha }}
-                    publish: true
 
