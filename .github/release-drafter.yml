@@ -1,4 +1,8 @@
 template: |
+
+  ## Trigger release
+    https://www.google.com
+
   ## What’s Changed
 
   $CHANGES
