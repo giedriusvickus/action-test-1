@@ -40,3 +40,13 @@ jobs:
 
             -   name: Build FrontEnd application
                 run: yarn run build
+
+            -   name: Release
+                id: create_release
+                uses: release-drafter/release-drafter@v5
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    name: Release ${{ github.sha }}
+                    publish: true
+
