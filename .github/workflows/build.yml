@@ -51,6 +51,7 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
-                    name: Release ${{ github.sha }}
+                    tag: release-${{ github.sha }}
+                    name: Release version - ${{ github.sha }}
                     publish: true
 
