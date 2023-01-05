@@ -1,4 +1,4 @@
-name: Promote release
+name: Promote release reuseable workflow
 
 on:
     workflow_call:
