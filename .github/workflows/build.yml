@@ -68,4 +68,5 @@ jobs:
                     tag: release-${{ github.sha }}
                     name: Release version - ${{ github.sha }}
                     publish: true
+                    footer: https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }}
 
