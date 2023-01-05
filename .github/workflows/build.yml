@@ -30,42 +30,42 @@ jobs:
                 id: check_files
                 uses: andstor/file-existence-action@v2
                 with:
-                    files: "test.txt"
+                    files: "test1/test2.txt"
 
             -   name: File exists
                 if: steps.check_files.outputs.files_exists == 'false'
-                run: echo "test" >> test.txt
+                run: cd test1 && echo "test" >> test.txt
 
-            -   name: Yarn timeout config
-                run: yarn config set network-timeout 300000
-
-            -   name: Install dependencies
-                run: yarn --prefer-offline
-
-            -   name: Build FrontEnd application
-                run: yarn run build
-
-            -   name: Get list of releases
-                run: |
-                    releases=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/repos/giedriusvickus/actions-test-1/releases)
-
-            -   name: Loop through releases
-                run: |
-                    for release_id in $(echo $releases | jq -r '.[].id'); do
-                        release_name=$(echo $releases | jq -r ".[] | select(.id == $release_id).name")
-                    if [[ $release_name == *"(ACTIVE)"* ]]; then
-                        export RELEASE_ID=$release_id
-                        break
-                    fi
-                    done
-
-            -   name: Release
-                id: create_release
-                uses: release-drafter/release-drafter@v5
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                with:
-                    tag: release-${{ github.sha }}
-                    name: Release version - ${{ github.sha }}
-                    publish: true
+#            -   name: Yarn timeout config
+#                run: yarn config set network-timeout 300000
+#
+#            -   name: Install dependencies
+#                run: yarn --prefer-offline
+#
+#            -   name: Build FrontEnd application
+#                run: yarn run build
+#
+#            -   name: Get list of releases
+#                run: |
+#                    releases=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/repos/giedriusvickus/actions-test-1/releases)
+#
+#            -   name: Loop through releases
+#                run: |
+#                    for release_id in $(echo $releases | jq -r '.[].id'); do
+#                        release_name=$(echo $releases | jq -r ".[] | select(.id == $release_id).name")
+#                    if [[ $release_name == *"(ACTIVE)"* ]]; then
+#                        export RELEASE_ID=$release_id
+#                        break
+#                    fi
+#                    done
+#
+#            -   name: Release
+#                id: create_release
+#                uses: release-drafter/release-drafter@v5
+#                env:
+#                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                with:
+#                    tag: release-${{ github.sha }}
+#                    name: Release version - ${{ github.sha }}
+#                    publish: true
 
