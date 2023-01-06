@@ -55,5 +55,4 @@ jobs:
                     header: Git SHA - ${{ github.sha }}
                     footer: |
 
-                        Deploy link
-                        https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }}
+                        [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }})
