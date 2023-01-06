@@ -4,8 +4,4 @@ template: |
 
   $CHANGES
 
-  ## Contributors
-
-  $CONTRIBUTORS
-
   ## Trigger Deployment link
