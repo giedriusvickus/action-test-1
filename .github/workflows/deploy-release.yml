@@ -16,7 +16,7 @@ jobs:
             packages: write
 
         steps:
-            -   uses: cardinalby/git-get-release-action@v1.2.4
+            -   uses: cardinalby/git-get-release-action@v1
                 id: getByCommitSha
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
