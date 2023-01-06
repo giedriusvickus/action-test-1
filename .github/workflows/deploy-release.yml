@@ -22,7 +22,6 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     commitSha: ${{ inputs.version }}
-                    prerelease: false
 
             -   name: Make latest
                 run: |
