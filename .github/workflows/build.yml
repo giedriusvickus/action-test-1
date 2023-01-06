@@ -47,6 +47,10 @@ jobs:
                 id: datetime
                 run: echo "now=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
+            -   name: Set current date as env variable
+                id: datetime-short
+                run: echo "now=$(date +'%Y-%m-%d %H:%M')" >> $GITHUB_OUTPUT
+
             -   name: Release
                 id: create_release
                 uses: release-drafter/release-drafter@v5
@@ -54,7 +58,7 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tag: tag-${{ github.sha }}
-                    name: Release - ${{ github.event.pull_request.title || github.event.head_commit.message }}
+                    name: v(${{ steps.datetime-short.outputs.now }}) - ${{ github.event.pull_request.title || github.event.head_commit.message }}
                     publish: false
                     header: |
                         Release date - ${{ steps.datetime.outputs.now }}
