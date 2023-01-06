@@ -43,6 +43,10 @@ jobs:
 #
 #            -   name: Build FrontEnd application
 #                run: yarn run build  ${{ github.event.pull_request.title }}
+            -   name: Set current date as env variable
+                id: datetime
+                run: echo "now=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
+
             -   name: Release
                 id: create_release
                 uses: release-drafter/release-drafter@v5
@@ -50,7 +54,7 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tag: tag-${{ github.sha }}
-                    name: Release - ${{ github.event.pull_request.title || github.event.head_commit.message }}
+                    name: Release (${{ steps.datetime.outputs.now }}) - ${{ github.event.pull_request.title || github.event.head_commit.message }}
                     publish: false
                     header: Git SHA - ${{ github.sha }}
                     footer: |
