@@ -1,3 +1,5 @@
+name: Deploy version
+
 on:
     workflow_dispatch:
         inputs:
