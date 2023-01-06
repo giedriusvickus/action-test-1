@@ -4,4 +4,6 @@ template: |
 
   $CHANGES
 
-  ## Trigger Deployment link
+  ## Deployment
+
+  "Latest" tag indicated which release is currently on PROD environment.
