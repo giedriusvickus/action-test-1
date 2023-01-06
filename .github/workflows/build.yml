@@ -51,7 +51,7 @@ jobs:
                 with:
                     tag: tag-${{ github.sha }}
                     name: Release - ${{ github.event.pull_request.title || github.event.head_commit.message }}
-                    publish: true
+                    publish: false
                     header: Git SHA - ${{ github.sha }}
                     footer: |
                         [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }})
