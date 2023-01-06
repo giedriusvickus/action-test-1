@@ -1,7 +1,9 @@
 template: |
+    ## Trigger Deployment link
 
   ## What’s Changed
 
   $CHANGES
 
-  ## Trigger Deployment link
+footer: |
+    Bla bla footer stuff
