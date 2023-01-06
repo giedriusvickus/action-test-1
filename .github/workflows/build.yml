@@ -54,8 +54,10 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tag: tag-${{ github.sha }}
-                    name: Release (${{ steps.datetime.outputs.now }}) - ${{ github.event.pull_request.title || github.event.head_commit.message }}
+                    name: Release - ${{ github.event.pull_request.title || github.event.head_commit.message }}
                     publish: false
-                    header: Git SHA - ${{ github.sha }}
+                    header: |
+                        Release date - ${{ steps.datetime.outputs.now }}
+                        Git SHA - ${{ github.sha }}
                     footer: |
                         [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }})
