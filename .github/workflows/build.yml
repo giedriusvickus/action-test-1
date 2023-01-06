@@ -2,7 +2,7 @@ name: Auto Deploy
 
 on:
     push:
-        branches: [ "main1" ]
+        branches: [ "main" ]
 
 jobs:
     build:
@@ -43,21 +43,7 @@ jobs:
 #                run: yarn --prefer-offline
 #
 #            -   name: Build FrontEnd application
-#                run: yarn run build
-
-            -   name: Get list of releases
-                run: |
-                    releases=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/repos/giedriusvickus/actions-test-1/releases)
-
-            -   name: Loop through releases
-                run: |
-                    for release_id in $(echo $releases | jq -r '.[].id'); do
-                        release_name=$(echo $releases | jq -r ".[] | select(.id == $release_id).name")
-                    if [[ $release_name == *"(ACTIVE)"* ]]; then
-                        export RELEASE_ID=$release_id
-                        break
-                    fi
-                    done
+#                run: yarn run build  ${{ github.event.pull_request.title }}
 
             -   name: Release
                 id: create_release
@@ -65,8 +51,9 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
-                    tag: release-${{ github.sha }}
-                    name: Release version - ${{ github.sha }}
+                    tag: v-${{ github.sha }}
+                    name: Release - ${{ github.event.pull_request.title || github.event.head_commit.message }}
                     publish: true
+                    header: ${{ github.sha }}
                     footer: https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }}
 
