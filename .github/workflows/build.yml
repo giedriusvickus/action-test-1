@@ -56,4 +56,3 @@ jobs:
                     publish: true
                     header: ${{ github.sha }}
                     footer: [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }})
-
