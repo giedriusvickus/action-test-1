@@ -45,7 +45,7 @@ jobs:
 #                run: yarn run build  ${{ github.event.pull_request.title }}
             -   name: Set current date as env variable
                 id: datetime
-                run: echo "now=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
+                run: echo "now=$(date +'%Y-%m-%d%H:%M:%S')" >> $GITHUB_OUTPUT
 
             -   name: Release
                 id: create_release
