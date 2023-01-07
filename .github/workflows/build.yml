@@ -60,6 +60,7 @@ jobs:
                     tag: tag-${{ github.sha }}
                     name: ${{ steps.datetime-short.outputs.now }} - ${{ github.event.pull_request.title || github.event.head_commit.message }}
                     prerelease: true
+                    publish: true
                     header: |
                         Release date - ${{ steps.datetime.outputs.now }}
                         Git SHA - ${{ github.sha }}
