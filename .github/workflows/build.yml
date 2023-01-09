@@ -4,6 +4,8 @@ on:
     pull_request:
         types:
             - closed
+        branches:
+            - main
     repository_dispatch:
         types: [ automated-deploy ]
 
