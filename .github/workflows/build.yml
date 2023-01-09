@@ -61,7 +61,7 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tag: tag-${{ github.sha }}
-                    name: ${{ steps.datetime-short.outputs.now }} - ${{ github.event.pull_request.title || github.event.head_commit.message }}
+                    name: ${{ steps.datetime-short.outputs.now }} - ${{ github.event.pull_request.title || github.event.client_payload.COMMIT_MSG }}
                     prerelease: true
                     publish: true
                     header: |
