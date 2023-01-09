@@ -3,7 +3,7 @@ name: Trigger build with workflow
 on:
     workflow_dispatch:
         inputs:
-            version:
+            sha:
                 description: 'Define git sha'
 
 jobs:
@@ -20,6 +20,7 @@ jobs:
                 uses: passeidireto/trigger-external-workflow-action@main
                 env:
                     PAYLOAD_COMMIT_MSG: Automated commit bim bam
+                    PAYLOAD_COMMIT_SHA: ${{ inputs.sha }}
                 with:
                     repository: giedriusvickus/action-test-1
                     event: automated-deploy

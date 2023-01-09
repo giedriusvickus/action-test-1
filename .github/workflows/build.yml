@@ -60,12 +60,12 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
-                    tag: tag-${{ github.sha }}
+                    tag: tag-${{ github.event.client_payload.COMMIT_SHA || github.sha }}
                     name: ${{ steps.datetime-short.outputs.now }} - ${{ github.event.pull_request.title || github.event.client_payload.COMMIT_MSG }}
                     prerelease: true
                     publish: true
                     header: |
                         Release date - ${{ steps.datetime.outputs.now }}
-                        Git SHA - ${{ github.sha }}
+                        Git SHA - ${{ github.event.client_payload.COMMIT_SHA || github.sha }}
                     footer: |
-                        [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.sha }})
+                        [Deploy link](https://dappradar.dev/release-wf-trigger/giedriusvickus/${{ github.event.client_payload.COMMIT_SHA || github.sha }})
