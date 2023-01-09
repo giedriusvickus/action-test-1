@@ -1,4 +1,4 @@
-name: Deploy release
+name: Trigger build with workflow
 
 on:
     workflow_dispatch:
