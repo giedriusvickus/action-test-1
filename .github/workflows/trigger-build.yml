@@ -1,4 +1,5 @@
 name: Trigger build with workflow
+run-name: ${{ inputs.sha }} Trigger name
 
 on:
     workflow_dispatch:
