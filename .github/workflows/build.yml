@@ -1,8 +1,11 @@
 name: Auto Deploy
 
 on:
-    push:
-        branches: [ "main" ]
+    pull_request:
+        types:
+            - closed
+    repository_dispatch:
+        types: [ automated-deploy ]
 
 jobs:
     build:

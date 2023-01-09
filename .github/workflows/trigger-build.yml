@@ -1,0 +1,24 @@
+name: Deploy release
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'Define git sha'
+
+jobs:
+    deploy:
+        name: deploy
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+            packages: write
+
+        steps:
+            -   name: Trigger build
+                uses: passeidireto/trigger-external-workflow-action@main
+                with:
+                    repository: giedriusvickus/action-test-1
+                    event: automated-deploy
+                    github_pat: ${{ secrets.AUTH_TOKEN }}
